@@ -560,6 +560,20 @@ const MerchantManagement = () => {
                   " -"
                 )}
               </div>
+              {selectedMerchant.allCoupons && selectedMerchant.allCoupons.length > 0 && (
+                <div>
+                  <h4>All Coupons:</h4>
+                  <ul>
+                    {selectedMerchant.allCoupons.map(coupon => (
+                      <li key={coupon._id}>
+                        <strong>{coupon.couponName}</strong> - {coupon.discount}% off<br />
+                        Valid: {coupon.validFrom} to {coupon.validTo}<br />
+                        Description: {coupon.description}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
             <div className="flex justify-end mt-6">
               <button
