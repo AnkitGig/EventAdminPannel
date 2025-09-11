@@ -1,4 +1,4 @@
-const BASE_URL = "https://eventuna.onrender.com/api"
+const BASE_URL = "https://eventuna.com/api"
 
 class ApiService {
   // New: Get all users (V2)

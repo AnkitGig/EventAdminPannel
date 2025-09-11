@@ -139,11 +139,19 @@ const UserManagement = () => {
                 <tr key={user.id || user._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
-                        <span className="text-sm font-medium text-gray-700">
-                          {(user.name || user.firstName || user.email)?.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
+                        <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-300 overflow-hidden">
+                          {user.profilePic ? (
+                            <img
+                              src={user.profilePic}
+                              alt={user.name || user.email}
+                              className="w-10 h-10 object-cover rounded-full"
+                            />
+                          ) : (
+                            <span className="text-sm font-medium text-gray-700">
+                              {(user.name || user.firstName || user.email)?.charAt(0).toUpperCase()}
+                            </span>
+                          )}
+                        </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">
                           {user.name || `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.email}

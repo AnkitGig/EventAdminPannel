@@ -1,10 +1,28 @@
+import { useState, useEffect } from "react";
+
 const Dashboard = () => {
-  const stats = [
-    { title: "Total Merchants", value: "156", change: "+12%", color: "bg-blue-500" },
+  const [stats, setStats] = useState([
+    { title: "Total Merchants", value: "-", change: "+0%", color: "bg-blue-500" },
     { title: "Active Services", value: "89", change: "+5%", color: "bg-green-500" },
     { title: "Total Users", value: "2,341", change: "+18%", color: "bg-purple-500" },
     { title: "Pending Approvals", value: "23", change: "-3%", color: "bg-orange-500" },
-  ]
+  ]);
+
+  useEffect(() => {
+    // Simulate API call for merchants
+    async function fetchMerchantStats() {
+      // Replace with actual API call
+      const response = {
+        totalMerchants: 2,
+      };
+      setStats(prev => prev.map(stat =>
+        stat.title === "Total Merchants"
+          ? { ...stat, value: response.totalMerchants }
+          : stat
+      ));
+    }
+    fetchMerchantStats();
+  }, []);
 
   return (
     <div className="space-y-6">
