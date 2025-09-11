@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://eventuna.onrender.com/api",
+  baseURL: "https://eventuna.com/api",
 });
 
 // Attach token from localStorage
