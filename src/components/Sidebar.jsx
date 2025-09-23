@@ -1,51 +1,34 @@
 "use client"
 
-import { useState } from "react"
+// import { useState } from "react"
 import { FaUser, FaStore, FaClipboardList, FaCog, FaUsers, FaStickyNote, FaPlus, FaSignInAlt, FaLayerGroup, FaMapMarkerAlt, FaThList, FaChevronRight, FaChevronDown, FaChartBar } from "react-icons/fa"
 
-const Sidebar = ({ activeSection, setActiveSection, isOpen, setIsOpen }) => {
-  const [expandedSections, setExpandedSections] = useState({
-    admin: true,
-    merchant: true,
-  })
+const Sidebar = ({ activeSection, setActiveSection, isOpen, setIsOpen, onLogout }) => {
 
-  const toggleSection = (section) => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }))
-  }
+
+
 
   const menuItems = [
     {
-      id: "admin",
-      label: "Admin",
-      icon: <FaUser />,
+      id: "merchant",
+      label: "Merchant",
+      icon: <FaStore />,
       children: [
-        {
-          id: "merchant",
-          label: "Merchant",
-          icon: <FaStore />,
-          children: [
-            { id: "all-merchants", label: "all-merchants",  color: "text-green-600", icon: <FaThList /> },
-          ],
-        },
-        { id: "services", label: "services",  color: "text-orange-600", icon: <FaCog /> },
-        { id: "get-all-services", label: "Get All Services",  color: "text-green-600", icon: <FaClipboardList /> },
-        { id: "get-sub-services", label: "Get Sub Services",  color: "text-green-600", icon: <FaLayerGroup /> },
-        { id: "add-notes", label: "Add Notes",  color: "text-orange-600", icon: <FaStickyNote /> },
-        { id: "all-users", label: "All Users",  color: "text-green-600", icon: <FaUsers /> },
-        { id: "additional-services", label: "Additional Services",  color: "text-orange-600", icon: <FaPlus /> },
-        { id: "place-preference", label: "Place Preference", color: "text-orange-600", icon: <FaMapMarkerAlt /> },
-        { id: "subservices", label: "Subservices",  color: "text-orange-600", icon: <FaLayerGroup /> },
-        { id: "admin-login", label: "Admin Login", color: "text-orange-600", icon: <FaSignInAlt /> },
+        { id: "all-merchants", label: "all-merchants",  color: "text-green-600", icon: <FaThList /> },
       ],
     },
+    { id: "services", label: "services",  color: "text-orange-600", icon: <FaCog /> },
+    { id: "get-all-services", label: "Get All Services",  color: "text-green-600", icon: <FaClipboardList /> },
+    { id: "get-sub-services", label: "Get Sub Services",  color: "text-green-600", icon: <FaLayerGroup /> },
+    { id: "add-notes", label: "Add Notes",  color: "text-orange-600", icon: <FaStickyNote /> },
+    { id: "all-users", label: "All Users",  color: "text-green-600", icon: <FaUsers /> },
+    { id: "additional-services", label: "Additional Services",  color: "text-orange-600", icon: <FaPlus /> },
+    { id: "place-preference", label: "Place Preference", color: "text-orange-600", icon: <FaMapMarkerAlt /> },
+    { id: "subservices", label: "Subservices",  color: "text-orange-600", icon: <FaLayerGroup /> },
   ]
 
   const renderMenuItem = (item, level = 0) => {
     const hasChildren = Array.isArray(item.children) && item.children.length > 0;
-    const isExpanded = expandedSections[item.id];
     const isActive = activeSection === item.id;
 
     return (
@@ -54,20 +37,9 @@ const Sidebar = ({ activeSection, setActiveSection, isOpen, setIsOpen }) => {
           className={`flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer transition-colors duration-200 ${
             isActive ? "bg-blue-100 text-blue-700 border-l-4 border-blue-500" : "text-gray-700 hover:bg-gray-100"
           }`}
-          onClick={() => {
-            if (hasChildren) {
-              toggleSection(item.id)
-            } else {
-              setActiveSection(item.id)
-            }
-          }}
+          onClick={() => setActiveSection(item.id)}
         >
           <div className="flex items-center space-x-2">
-            {hasChildren && (
-              <span className="text-gray-400">
-                {isExpanded ? <FaChevronDown size={14} /> : <FaChevronRight size={14} />}
-              </span>
-            )}
             {item.icon && <span className="text-lg">{item.icon}</span>}
             <span className="text-sm font-medium">{item.label}</span>
             {item.method && (
@@ -76,7 +48,7 @@ const Sidebar = ({ activeSection, setActiveSection, isOpen, setIsOpen }) => {
           </div>
         </div>
 
-        {hasChildren && isExpanded && (
+        {hasChildren && (
           <div className="mt-1 space-y-1">{item.children.map((child) => renderMenuItem(child, level + 1))}</div>
         )}
       </div>
@@ -100,7 +72,7 @@ const Sidebar = ({ activeSection, setActiveSection, isOpen, setIsOpen }) => {
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
-            <h1 className="text-xl font-bold text-gray-800">Admin Panel</h1>
+            <h1 className="text-xl font-bold text-gray-800">Event UNA</h1>
             <button
               onClick={() => setIsOpen(false)}
               className="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100"
@@ -125,6 +97,17 @@ const Sidebar = ({ activeSection, setActiveSection, isOpen, setIsOpen }) => {
 
             {menuItems.map((item) => renderMenuItem(item))}
           </nav>
+
+          {/* Logout Button */}
+          <div className="p-4 border-t border-gray-200">
+            <button
+              className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg cursor-pointer transition-colors duration-200 text-gray-700 hover:bg-gray-100"
+              onClick={onLogout}
+            >
+              <span className="text-lg"><FaSignInAlt /></span>
+              <span className="text-sm font-medium">Logout</span>
+            </button>
+          </div>
         </div>
       </div>
     </>

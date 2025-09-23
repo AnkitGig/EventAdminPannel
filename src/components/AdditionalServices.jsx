@@ -17,10 +17,10 @@ const AdditionalServices = () => {
     const fetchServices = async () => {
       try {
         const response = await apiService.getAllAdditionalServices()
-        // response.services is expected as per API
-        const formatted = response.services.map((s) => ({
-          id: s._id,
-          name: s.serviceName,
+        // response.data is expected as per API
+        const formatted = (response.data || []).map((s) => ({
+          id: s.id,
+          name: s.servicesName,
           createdAt: s.createdAt ? s.createdAt.split("T")[0] : "",
           status: "active", // No status in API, default to active
         }))
@@ -36,11 +36,11 @@ const AdditionalServices = () => {
     e.preventDefault()
     if (serviceName.trim()) {
       try {
-        const response = await apiService.addAdditionalService({ serviceName })
+        const response = await apiService.addAdditionalService({ servicesName: serviceName })
         // Assuming API returns the created service object
         const newService = {
-          id: response?._id || Date.now().toString(),
-          name: response?.serviceName || serviceName,
+          id: response?.id || Date.now().toString(),
+          name: response?.servicesName || serviceName,
           createdAt: response?.createdAt ? response.createdAt.split("T")[0] : new Date().toISOString().split("T")[0],
           status: "active",
         }
@@ -50,13 +50,13 @@ const AdditionalServices = () => {
         // Try to fetch the latest list to check if it was actually added
         try {
           const refreshed = await apiService.getAllAdditionalServices()
-          const exists = refreshed.services?.some(s => s.serviceName === serviceName)
+          const exists = (refreshed.data || []).some(s => s.servicesName === serviceName)
           if (exists) {
             setServiceName("")
             // Optionally, refresh the list
-            const formatted = refreshed.services.map((s) => ({
-              id: s._id,
-              name: s.serviceName,
+            const formatted = (refreshed.data || []).map((s) => ({
+              id: s.id,
+              name: s.servicesName,
               createdAt: s.createdAt ? s.createdAt.split("T")[0] : "",
               status: "active",
             }))
@@ -95,7 +95,7 @@ const AdditionalServices = () => {
       // Try to fetch the latest list to check if it was actually deleted
       try {
         const refreshed = await apiService.getAllAdditionalServices()
-        const exists = refreshed.services?.some(s => s._id === id)
+        const exists = (refreshed.data || []).some(s => s.id === id)
         if (!exists) {
           setServices((prev) => prev.filter((s) => s.id !== id))
           setShowDeleteId(null)
@@ -121,7 +121,7 @@ const AdditionalServices = () => {
   const handleEditSave = async (id) => {
     if (!editName.trim()) return
     try {
-      await apiService.updateAdditionalService(id, { serviceName: editName })
+      await apiService.updateAdditionalService(id, { servicesName: editName })
       setServices((prev) => prev.map((s) => s.id === id ? { ...s, name: editName } : s))
       setEditId(null)
       setEditName("")

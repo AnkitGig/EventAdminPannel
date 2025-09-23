@@ -35,9 +35,15 @@ import PlacePreferences from "./components/PlacePreferences"
 import SubServices from "./components/SubServices"
 import Login from "./components/Login"
 
+
+import { useEffect } from "react"
+
 function App() {
   const [activeSection, setActiveSection] = useState("dashboard")
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // Check localStorage for auth state on first render
+    return localStorage.getItem("isAuthenticated") === "true"
+  })
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
   const renderContent = () => {
@@ -67,8 +73,21 @@ function App() {
     }
   }
 
+
+  // When login, set localStorage
+  const handleLogin = () => {
+    setIsAuthenticated(true)
+    localStorage.setItem("isAuthenticated", "true")
+  }
+
+  // When logout, clear localStorage
+  const handleLogout = () => {
+    setIsAuthenticated(false)
+    localStorage.removeItem("isAuthenticated")
+  }
+
   if (!isAuthenticated) {
-    return <Login onLogin={() => setIsAuthenticated(true)} />
+    return <Login onLogin={handleLogin} />
   }
 
   return (
@@ -78,9 +97,10 @@ function App() {
         setActiveSection={setActiveSection}
         isOpen={sidebarOpen}
         setIsOpen={setSidebarOpen}
+        onLogout={handleLogout}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} onLogout={() => setIsAuthenticated(false)} />
+        <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} onLogout={handleLogout} />
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">{renderContent()}</main>
       </div>
     </div>

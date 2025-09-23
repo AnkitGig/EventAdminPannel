@@ -114,7 +114,7 @@ class ApiService {
   }
 
   async getAllAdditionalServices() {
-    return this.request("/admin/additional-services")
+    return this.request("/event/additional-services")
   }
 
   async deleteAdditionalService(serviceId) {
