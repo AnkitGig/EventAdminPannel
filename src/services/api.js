@@ -154,6 +154,15 @@ class ApiService {
   }
   async getEventTypes() {
     return this.request("/event/event-type")    
-}}
+  }
+
+  async getEventCategories(eventTypeId) {
+    return this.request(`/event/event-category/${eventTypeId}`)
+  }
+
+  async getAllEventCategories() {
+    return this.request("/event/event-category")
+  }
+}
 
 export default new ApiService()

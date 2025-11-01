@@ -8,6 +8,7 @@ const EventTypes = () => {
   const [categoryName, setCategoryName] = useState("")
   const [categoryEventType, setCategoryEventType] = useState("")
   const [eventTypes, setEventTypes] = useState([])
+  const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
 
@@ -46,25 +47,31 @@ const EventTypes = () => {
   }
 
   useEffect(() => {
-    const fetchEventTypes = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true)
-        const data = await ApiService.getEventTypes()
-        // Support different response shapes: array or { eventTypes: [...] }
+        // Fetch event types
+        const eventData = await ApiService.getEventTypes()
         let types = []
-        if (Array.isArray(data)) types = data
-        else if (data?.eventTypes) types = data.eventTypes
-        else if (data?.data) types = data.data
+        if (Array.isArray(eventData)) types = eventData
+        else if (eventData?.eventTypes) types = eventData.eventTypes
+        else if (eventData?.data) types = eventData.data
         setEventTypes(types)
+
+        // Fetch all categories
+        const categoryData = await ApiService.getAllEventCategories()
+        if (categoryData?.data) {
+          setCategories(categoryData.data)
+        }
       } catch (err) {
-        console.error("Failed to fetch event types", err)
+        console.error("Failed to fetch data", err)
       } finally {
         setLoading(false)
       }
     }
 
-    fetchEventTypes()
-  }, [])
+    fetchData()
+  }, [message])
 
   return (
     <div className="max-w-3xl mx-auto bg-white p-6 rounded-md shadow">
@@ -130,6 +137,30 @@ const EventTypes = () => {
           </button>
         </div>
       </form>
+
+      {/* Display Events and Categories */}
+      <div className="mt-8">
+        <h3 className="text-lg font-semibold mb-4">Event Types and Categories</h3>
+        {eventTypes.map((eventType) => (
+          <div key={eventType._id} className="mb-6 bg-gray-50 p-4 rounded-lg">
+            <h4 className="text-md font-semibold text-blue-600">
+              {eventType.eventType}
+            </h4>
+            <div className="ml-4 mt-2">
+              <h5 className="text-sm font-medium text-gray-700 mb-2">Categories:</h5>
+              <ul className="list-disc list-inside">
+                {categories
+                  .filter((cat) => cat.eventType._id === eventType._id)
+                  .map((category) => (
+                    <li key={category._id} className="text-sm text-gray-600 ml-2">
+                      {category.category}
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
