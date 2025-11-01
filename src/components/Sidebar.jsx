@@ -1,7 +1,7 @@
 "use client"
 
 // import { useState } from "react"
-import { FaUser, FaStore, FaClipboardList, FaCog, FaUsers, FaStickyNote, FaPlus, FaSignInAlt, FaLayerGroup, FaMapMarkerAlt, FaThList, FaChevronRight, FaChevronDown, FaChartBar } from "react-icons/fa"
+import { FaStore, FaClipboardList, FaCog, FaUsers, FaStickyNote, FaPlus, FaSignInAlt, FaLayerGroup, FaMapMarkerAlt, FaThList, FaChartBar } from "react-icons/fa"
 
 const Sidebar = ({ activeSection, setActiveSection, isOpen, setIsOpen, onLogout }) => {
 
