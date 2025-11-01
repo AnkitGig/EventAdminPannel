@@ -145,11 +145,11 @@ class ApiService {
     })
 
   }
-  async addEventCategory(category, eventType) {
-    // Send a single JSON object with both category and eventType
-    return this.request("/event/add-event-category", {
+  async addEventCategory(categoryName, eventTypeId) {
+    // Send a single JSON object with both category and eventType (expected by backend)
+    return this.request("/event/event-category", {
       method: "POST",
-      body: JSON.stringify({ category, eventType }),
+      body: JSON.stringify({ category: categoryName, eventType: eventTypeId }),
     })
   }
   async getEventTypes() {

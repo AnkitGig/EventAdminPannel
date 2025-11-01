@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import ApiService from "../services/api"
 
 const EventTypes = () => {
   const [eventTypeName, setEventTypeName] = useState("")
   const [categoryName, setCategoryName] = useState("")
   const [categoryEventType, setCategoryEventType] = useState("")
+  const [eventTypes, setEventTypes] = useState([])
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
 
@@ -31,8 +32,8 @@ const EventTypes = () => {
     setLoading(true)
     setMessage("")
     try {
-      // Send both category and eventType in one request
-      await ApiService.addEventCategory({ name: categoryName }, categoryEventType)
+      // Send both category and eventTypeId in one request
+      await ApiService.addEventCategory(categoryName, categoryEventType)
       setMessage("Event category added successfully")
       setCategoryName("")
       setCategoryEventType("")
@@ -43,6 +44,27 @@ const EventTypes = () => {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    const fetchEventTypes = async () => {
+      try {
+        setLoading(true)
+        const data = await ApiService.getEventTypes()
+        // Support different response shapes: array or { eventTypes: [...] }
+        let types = []
+        if (Array.isArray(data)) types = data
+        else if (data?.eventTypes) types = data.eventTypes
+        else if (data?.data) types = data.data
+        setEventTypes(types)
+      } catch (err) {
+        console.error("Failed to fetch event types", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchEventTypes()
+  }, [])
 
   return (
     <div className="max-w-3xl mx-auto bg-white p-6 rounded-md shadow">
@@ -72,6 +94,20 @@ const EventTypes = () => {
       </form>
 
       <form onSubmit={handleAddCategory}>
+           <label className="block text-sm font-medium text-gray-700 mt-3">Associated Event Type</label>
+        <select
+          value={categoryEventType}
+          onChange={(e) => setCategoryEventType(e.target.value)}
+          className="w-full mt-2 px-3 py-2 border rounded-md"
+          required
+        >
+          <option value="">Select event type</option>
+          {eventTypes.map((et) => (
+            <option key={et._id || et.id || et.value} value={et._id || et.id || et.value}>
+              {et.name || et.eventType || et.title || et.type}
+            </option>
+          ))}
+        </select>
         <label className="block text-sm font-medium text-gray-700">Category Name</label>
         <input
           type="text"
@@ -82,15 +118,7 @@ const EventTypes = () => {
           required
         />
 
-        <label className="block text-sm font-medium text-gray-700 mt-3">Associated Event Type</label>
-        <input
-          type="text"
-          value={categoryEventType}
-          onChange={(e) => setCategoryEventType(e.target.value)}
-          className="w-full mt-2 px-3 py-2 border rounded-md"
-          placeholder="Enter event type name (e.g. Wedding)"
-          required
-        />
+     
 
         <div className="mt-4">
           <button
