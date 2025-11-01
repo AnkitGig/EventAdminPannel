@@ -137,6 +137,23 @@ class ApiService {
       body: JSON.stringify(preferenceData),
     })
   }
-}
+
+  async addEventType(eventType) {
+    return this.request("/event/event-type", {
+      method: "POST",
+      body: JSON.stringify(eventType),
+    })
+
+  }
+  async addEventCategory(category, eventType) {
+    // Send a single JSON object with both category and eventType
+    return this.request("/event/add-event-category", {
+      method: "POST",
+      body: JSON.stringify({ category, eventType }),
+    })
+  }
+  async getEventTypes() {
+    return this.request("/event/event-type")    
+}}
 
 export default new ApiService()

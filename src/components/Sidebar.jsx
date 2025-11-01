@@ -17,6 +17,9 @@ const Sidebar = ({ activeSection, setActiveSection, isOpen, setIsOpen, onLogout 
         { id: "all-merchants", label: "all-merchants",  color: "text-green-600", icon: <FaThList /> },
       ],
     },
+
+        { id: "add-event-type", label: "Add Event Type & Category", color: "text-green-600", icon: <FaPlus /> },
+      
     { id: "services", label: "services",  color: "text-orange-600", icon: <FaCog /> },
     { id: "get-all-services", label: "Get All Services",  color: "text-green-600", icon: <FaClipboardList /> },
     { id: "get-sub-services", label: "Get Sub Services",  color: "text-green-600", icon: <FaLayerGroup /> },
